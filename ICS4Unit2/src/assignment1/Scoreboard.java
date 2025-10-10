@@ -25,11 +25,12 @@ public class Scoreboard {
 		}
 		Scanner in = new Scanner(System.in);
 		boolean validInput;
-		do {
+		int mode = 0;
+		do { //get valid mode
 			try {
 				validInput = true;
 				System.out.print("Hello! Type 1 to search by name, or type 2 to search by power: ");
-				int mode = Integer.parseInt(in.nextLine());
+				mode = Integer.parseInt(in.nextLine());
 				if(mode < 1 || mode > 2) {
 					throw new NumberFormatException();
 				}
@@ -38,6 +39,10 @@ public class Scoreboard {
 				System.out.println("Invalid number. Please type in either \"1\" or \"2\".");
 			}
 		} while (!validInput);
+		
+		if(mode == 1) { //search by name;
+			
+		}
 		in.close();
 	}
 
