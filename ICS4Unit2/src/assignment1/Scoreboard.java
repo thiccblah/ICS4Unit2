@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class Scoreboard {
@@ -17,11 +19,37 @@ public class Scoreboard {
 			BufferedReader fileIn = new BufferedReader(new FileReader("scoreboard.txt"));
 			String data;
 			while((data = fileIn.readLine()) != null) {
-				players.add(new Player(data.trim()));
+				data = data.trim();
+				try {
+					players.add(new Player(Integer.parseInt(data.substring(0, data.indexOf(" "))), //score
+							data.substring(data.indexOf(" ") + 1, data.lastIndexOf(" ")),  //name
+							data.substring(data.lastIndexOf(" ") + 1))); //power
+				} catch (NumberFormatException e) { //score missing
+					System.out.println("Score missing! Invalid line:\n" + data);
+				} catch (IndexOutOfBoundsException e) {
+					System.out.println("Invalid line:\n" + data);
+				} catch (Exception e) {
+					System.out.println("Unknown error! Invalid line:\n" + data);
+				}
 			}
+			fileIn.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found!");
 			System.exit(0);
+		}
+//		for(int i = 0; i < players.size(); i++) {
+//			System.out.println(players.get(i).getName());
+//		}
+		//assign rankings
+		Collections.sort(players); //default sort by score
+		players.get(0).setRanking(1); //highest score is always first
+		for(int i = 1; i < players.size(); i++) {
+			if(players.get(i).getScore() == players.get(i - 1).getScore()) { //player has the same score as the player above them, set the same rank
+				players.get(i).setRanking(players.get(i- 1).getRanking()); //inherit player above's rank
+			}
+			else { //player at i has a different (lower) score
+				players.get(i).setRanking(i + 1);
+			}
 		}
 		Scanner in = new Scanner(System.in);
 		boolean validInput;
@@ -34,6 +62,7 @@ public class Scoreboard {
 				if(mode < 1 || mode > 2) {
 					throw new NumberFormatException();
 				}
+				
 			} catch (NumberFormatException e) {
 				validInput = false;
 				System.out.println("Invalid number. Please type in either \"1\" or \"2\".");
@@ -41,9 +70,81 @@ public class Scoreboard {
 		} while (!validInput);
 		
 		if(mode == 1) { //search by name;
-			
+			System.out.println("Name search started");
+			Collections.sort(players, new SortByName());
+			boolean keepAsking;
+			do {
+				keepAsking = true;
+				System.out.print("Please enter the name that you would like to search for: ");
+				String name = in.nextLine().trim();
+				if(name.equals("exit")) {
+					keepAsking = false;
+					break;
+				}
+				Player key = new Player(0, name, "");
+//				System.out.println(key.getName());
+				int index = Collections.binarySearch(players, key, new SortByName());
+				if(index < 0) {
+					System.out.println("There are no players with the name " + name + ", Please try again.");
+				}
+				else {
+					System.out.println("Name: " + players.get(index).getName()
+							+ "\nPower: " + players.get(index).getPower()
+							+ "\nScore: " + players.get(index).getScore()
+							+ "\nRanking: " + players.get(index).getRanking() + " out of " + players.size());
+				}
+			} while (keepAsking);
+		}
+		else if(mode == 2) { //search by power
+			System.out.println("Power search started");
+			Collections.sort(players, new SortByPowerAndAlpha());
+			Comparator<Player> comparePower = new SortByPower(); //create comparator variable to
+			boolean keepAsking;
+			do {
+				keepAsking = true;
+				System.out.print("Please enter the power that you would like to search for: ");
+				String power = in.nextLine().trim();
+				if(power.equals("exit")) {
+					keepAsking = false;
+					break;
+				}
+				Player key = new Player(0, "", power);
+//				System.out.println(key.getName());
+				int index = Collections.binarySearch(players, key, new SortByPower());
+//				for(int i = 0; i < players.size(); i++) { //testing
+//					System.out.println(players.get(i));
+//				}
+//				System.out.println("index is" + index);
+				if(index < 0) {
+					System.out.println("There are no players with the power " + power + ", Please try again.");
+				}
+				else {
+					//players is already sorted by power, so all players of the same power are in consecutive lines
+					//find where the section of these players start
+					int startIndex = 0;
+					for(int i = index; i >= 0; i--) { //search left
+						if(comparePower.compare(key, players.get(i)) != 0) { //not the same, loop from the element after
+							break;
+						}
+						else { //element at i has the same power, new starting point is here
+							startIndex = i; //update startIndex
+						}
+					}
+					//print until player with different power is reached
+					for(int i = startIndex; i < players.size(); i++) {
+						if(comparePower.compare(key, players.get(i)) != 0) { //reached the next section of power
+							break;
+						}
+						System.out.println("Name: " + players.get(i).getName()
+								+ "\nPower: " + players.get(i).getPower()
+								+ "\nScore: " + players.get(i).getScore()
+								+ "\nRanking: " + players.get(i).getRanking() + " out of " + players.size() + "\n");
+					}
+				}
+			} while (keepAsking);
 		}
 		in.close();
+		System.out.println("Thank you for using the program.");
 	}
 
 }

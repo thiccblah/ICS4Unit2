@@ -6,15 +6,16 @@ public class Player implements Comparable<Player> {
 	private int score;
 	private String name;
 	private String power;
+	private int ranking;
 	
 	//constructor
-	public Player(String data) {
-		this.score = Integer.parseInt(data.substring(0, data.indexOf(" ")));
-		this.name = data.substring(data.indexOf(" ") + 1, data.lastIndexOf(" "));
-		this.power = data.substring(data.lastIndexOf(" ") + 1);
+	public Player(int score, String name, String power) {
+		this.score = score;
+		this.name = name;
+		this.power = power;
 		playerCount++; //increment playerCount when new player created
 	}
-	
+		
 	//player count getter
 	public static int getPlayerCount() {
 		return playerCount;
@@ -30,12 +31,35 @@ public class Player implements Comparable<Player> {
 		return power;
 	}
 	
+	//player score getter
+	public int getScore() {
+		return score;
+	}
+	
+	//player ranking getter
+	public int getRanking() {
+		return ranking;
+	}
+	
+	//player ranking setter
+	public void setRanking(int ranking) {
+		this.ranking = ranking;
+	}
+	
 	public boolean equals(Object obj) {
 		Player p = (Player) obj;
 		return this.name.equals(p.name);
 	}
 
-	public int compareTo(Player p) { //default sort by score
-		return this.score - p.score;
+	public int compareTo(Player p) { //default sort by score descending
+		int diff = -(this.score - p.score);
+		if(diff == 0) {
+			return this.name.compareToIgnoreCase(p.name);
+		}
+		return diff;
+	}
+	
+	public String toString() { //for testing
+		return "[" + name + " " + power + " " + score + "]"; 
 	}
 }
