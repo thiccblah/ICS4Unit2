@@ -6,12 +6,14 @@ public class Player implements Comparable<Player> {
 	private String name;
 	private String power;
 	private int ranking;
+	private static int playerCount;
 	
 	//constructor
 	public Player(int score, String name, String power) {
 		this.score = score;
 		this.name = name;
 		this.power = power;
+		playerCount++;
 	}
 		
 	//player name getter
@@ -52,4 +54,10 @@ public class Player implements Comparable<Player> {
 		return diff;
 	}
 	
+	public String toString() {
+		return "Name: " + name
+				+ "\nPower: " + power
+				+ "\nScore: " + score
+				+ "\nRanking: " + ranking + " out of " + playerCount;
+	}
 }
