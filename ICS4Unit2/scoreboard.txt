@@ -7,3 +7,5 @@
 75 Pikachu Thunderbolt
 99 Magneto Magnetism
 105 Storm Thunderbolt
+100 Storm2 Thunderbolt
+102 Storm3 Thunderbolt
