@@ -1,7 +1,6 @@
 package assignment1;
 
 public class Player implements Comparable<Player> {
-	private static int playerCount = 0;
 	
 	private int score;
 	private String name;
@@ -13,14 +12,8 @@ public class Player implements Comparable<Player> {
 		this.score = score;
 		this.name = name;
 		this.power = power;
-		playerCount++; //increment playerCount when new player created
 	}
 		
-	//player count getter
-	public static int getPlayerCount() {
-		return playerCount;
-	}
-	
 	//player name getter
 	public String getName() {
 		return name;
@@ -59,7 +52,4 @@ public class Player implements Comparable<Player> {
 		return diff;
 	}
 	
-	public String toString() { //for testing
-		return "[" + name + " " + power + " " + score + "]"; 
-	}
 }

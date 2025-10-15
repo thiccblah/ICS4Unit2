@@ -1,13 +1,7 @@
 package assignment1;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Scoreboard {
 
@@ -37,7 +31,7 @@ public class Scoreboard {
 			System.out.println("File not found!");
 			System.exit(0);
 		}
-//		for(int i = 0; i < players.size(); i++) {
+//		for(int i = 0; i < players.size(); i++) { //testing
 //			System.out.println(players.get(i).getName());
 //		}
 		//assign rankings
@@ -69,15 +63,15 @@ public class Scoreboard {
 			}
 		} while (!validInput);
 		
-		if(mode == 1) { //search by name;
+		if(mode == 1) { //search by name
 			System.out.println("Name search started");
 			Collections.sort(players, new SortByName());
 			boolean keepAsking;
 			do {
 				keepAsking = true;
-				System.out.print("Please enter the name that you would like to search for: ");
+				System.out.print("Please enter the name that you would like to search for (\"exit\" to stop): ");
 				String name = in.nextLine().trim();
-				if(name.equals("exit")) {
+				if(name.equalsIgnoreCase("exit")) {
 					keepAsking = false;
 					break;
 				}
@@ -85,7 +79,7 @@ public class Scoreboard {
 //				System.out.println(key.getName());
 				int index = Collections.binarySearch(players, key, new SortByName());
 				if(index < 0) {
-					System.out.println("There are no players with the name " + name + ", Please try again.");
+					System.out.println("There are no players with the name \"" + name + "\", Please try again.");
 				}
 				else {
 					System.out.println("Name: " + players.get(index).getName()
@@ -97,14 +91,14 @@ public class Scoreboard {
 		}
 		else if(mode == 2) { //search by power
 			System.out.println("Power search started");
-			Collections.sort(players, new SortByPowerAndAlpha());
-			Comparator<Player> comparePower = new SortByPower(); //create comparator variable to
+			Collections.sort(players, new SortByPowerAndAlpha()); //sort alphabetically within each power so that you can simply loop print
+			Comparator<Player> comparePower = new SortByPower(); //create comparator variable to compare players in this driver file
 			boolean keepAsking;
 			do {
 				keepAsking = true;
-				System.out.print("Please enter the power that you would like to search for: ");
+				System.out.print("Please enter the power that you would like to search for (\"exit\" to stop): ");
 				String power = in.nextLine().trim();
-				if(power.equals("exit")) {
+				if(power.equalsIgnoreCase("exit")) {
 					keepAsking = false;
 					break;
 				}
@@ -116,11 +110,12 @@ public class Scoreboard {
 //				}
 //				System.out.println("index is" + index);
 				if(index < 0) {
-					System.out.println("There are no players with the power " + power + ", Please try again.");
+					System.out.println("There are no players with the power \"" + power + "\", Please try again.");
 				}
 				else {
 					//players is already sorted by power, so all players of the same power are in consecutive lines
 					//find where the section of these players start
+					//I am NOT looping through the whole arrayList, just finding the bounds of the section this power takes up
 					int startIndex = 0;
 					for(int i = index; i >= 0; i--) { //search left
 						if(comparePower.compare(key, players.get(i)) != 0) { //not the same, loop from the element after

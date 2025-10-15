@@ -1,5 +1,5 @@
 101 Spiderman Web-shooter
-85 Jiggly Puff Sing
+88 Jiggly Puff Sing
 120 Batman Stealth
 95 Iron Man Repulsor
 88 Elsa Ice
