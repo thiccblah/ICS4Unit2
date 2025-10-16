@@ -15,6 +15,12 @@ public class Player implements Comparable<Player> {
 		this.power = power;
 		playerCount++;
 	}
+	
+	//alternate player constructor for temp players so that playerCount is not incremented, keeps playerCount accurate
+	public Player(String name, String power) {
+		this.name = name;
+		this.power = power;
+	}
 		
 	//player name getter
 	public String getName() {
@@ -58,6 +64,7 @@ public class Player implements Comparable<Player> {
 		return "Name: " + name
 				+ "\nPower: " + power
 				+ "\nScore: " + score
-				+ "\nRanking: " + ranking + " out of " + playerCount;
+				+ "\nRanking: " + ranking + " out of " + playerCount
+				+ "\n";
 	}
 }
