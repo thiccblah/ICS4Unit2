@@ -125,7 +125,7 @@ public class ScoreboardBonus {
 							endIndex = i - 1;
 							break;
 						}
-						else { //element at i has the same name, new starting point is here
+						else { //element at i has the same name, new ending point is here
 							//check if power and rank are same
 							if(allSameRank) {
 								if(players.get(i).getRanking() != refRank) //there are different ranks within this name
