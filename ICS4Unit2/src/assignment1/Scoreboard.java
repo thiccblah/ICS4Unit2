@@ -5,6 +5,10 @@ import java.util.*;
 
 public class Scoreboard {
 
+	//Scoreboard assignment
+	//Nathan Chan Oct 17 2025
+	//This program prompts for either name search or power search, then repeatedly asks for the property of that field to search for.
+	//The input file for this program can be found at "scoreboard.txt"
 	public static void main(String[] args) throws IOException {
 		//create arrayList of players
 		ArrayList<Player> players = new ArrayList<Player>();
@@ -20,9 +24,9 @@ public class Scoreboard {
 							data.substring(data.lastIndexOf(" ") + 1))); //power
 				} catch (NumberFormatException e) { //score missing
 					System.out.println("Score missing! Invalid line:\n" + data);
-				} catch (IndexOutOfBoundsException e) {
+				} catch (IndexOutOfBoundsException e) { //misformatted data
 					System.out.println("Invalid line:\n" + data);
-				} catch (Exception e) {
+				} catch (Exception e) { //technically shouldn't be possible, but for debugging just in case
 					System.out.println("Unknown error! Invalid line:\n" + data);
 				}
 			}
@@ -30,6 +34,8 @@ public class Scoreboard {
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found!");
 			System.exit(0);
+		} catch (IOException e) {
+			System.out.println("Reading error");
 		}
 //		for(int i = 0; i < players.size(); i++) { //testing
 //			System.out.println(players.get(i).getName());
@@ -75,24 +81,21 @@ public class Scoreboard {
 					keepAsking = false;
 					break;
 				}
-				Player key = new Player(0, name, "");
+				Player key = new Player(name, "");
 //				System.out.println(key.getName());
 				int index = Collections.binarySearch(players, key, new SortByName());
 				if(index < 0) {
 					System.out.println("There are no players with the name \"" + name + "\", Please try again.");
 				}
 				else {
-					System.out.println("Name: " + players.get(index).getName()
-							+ "\nPower: " + players.get(index).getPower()
-							+ "\nScore: " + players.get(index).getScore()
-							+ "\nRanking: " + players.get(index).getRanking() + " out of " + players.size());
+					System.out.println(players.get(index));
 				}
 			} while (keepAsking);
 		}
 		else if(mode == 2) { //search by power
 			System.out.println("Power search started");
-			Collections.sort(players, new SortByPowerAndAlpha()); //sort alphabetically within each power so that you can simply loop print
-			Comparator<Player> comparePower = new SortByPower(); //create comparator variable to compare players in this driver file
+			Collections.sort(players, new SortByPowerAndName()); //sort alphabetically within each power so that you can simply loop print
+			Comparator<Player> comparePower = new SortByPower(); //I could have just used compareTo, but this makes the code easier to read
 			boolean keepAsking;
 			do {
 				keepAsking = true;
@@ -102,7 +105,7 @@ public class Scoreboard {
 					keepAsking = false;
 					break;
 				}
-				Player key = new Player(0, "", power);
+				Player key = new Player("", power);
 //				System.out.println(key.getName());
 				int index = Collections.binarySearch(players, key, new SortByPower());
 //				for(int i = 0; i < players.size(); i++) { //testing
@@ -130,10 +133,7 @@ public class Scoreboard {
 						if(comparePower.compare(key, players.get(i)) != 0) { //reached the next section of power
 							break;
 						}
-						System.out.println("Name: " + players.get(i).getName()
-								+ "\nPower: " + players.get(i).getPower()
-								+ "\nScore: " + players.get(i).getScore()
-								+ "\nRanking: " + players.get(i).getRanking() + " out of " + players.size() + "\n");
+						System.out.println(players.get(i));
 					}
 				}
 			} while (keepAsking);
