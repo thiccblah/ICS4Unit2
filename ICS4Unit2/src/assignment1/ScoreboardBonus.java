@@ -85,7 +85,6 @@ public class ScoreboardBonus {
 				else { //player has been found
 					//find number of players with the same name
 					int startIndex = 0;
-					int endIndex = 0;
 					int refRank = players.get(index).getRanking();
 					String refPower = players.get(index).getPower();
 					boolean allSameRank = true, allSamePower = true;
@@ -107,6 +106,7 @@ public class ScoreboardBonus {
 							startIndex = i; //update startIndex
 						}
 					}
+					int endIndex = startIndex; //default value just in case index is the last element
 					for(int i = index + 1; i < players.size(); i++) { //search right
 						if(compareName.compare(key, players.get(i)) != 0) { //not the same, last player with the same name is the element before
 							endIndex = i - 1;

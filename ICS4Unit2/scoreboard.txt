@@ -9,3 +9,4 @@
 105 Storm Thunderbolt
 100 Storm2 Thunderbolt
 102 Storm3 Thunderbolt
+100 G100 Fire
