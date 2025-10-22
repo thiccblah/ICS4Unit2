@@ -8,5 +8,5 @@
 95 F2 Shield
 95 F3 Shield
 100 G Fire
-100 G2 Fire
-100 G3 Fire
+200 G Fire
+120 G Fire

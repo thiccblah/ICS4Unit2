@@ -2,6 +2,7 @@ package assignment1;
 
 import java.util.Comparator;
 
+//sorts by power alphabetically ascending and if powers are the same sorts by ranking ascending
 public class SortByPowerAndRanking implements Comparator<Player> {
 	public int compare(Player player1, Player player2) {
 		int diff = player1.getPower().compareToIgnoreCase(player2.getPower());

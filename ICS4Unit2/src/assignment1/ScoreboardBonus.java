@@ -5,6 +5,17 @@ import java.util.*;
 
 public class ScoreboardBonus {
 
+	//Scoreboard bonus task
+	//Nathan Chan Oct 17 2025
+	//This program is an extension of the Scoreboard program that is able to handle duplicate names.
+	//In this program, the behaviour when multiple instances of the same name/power are as follows:
+	//all duplicate names have same power -> autosort by ranking; same ranking -> autosort by power
+	//all duplicate powers have same name -> autosort by ranking; same ranking -> autosort by name
+	//all values of all duplicates are the same -> just print all duplicates
+	//no common values across all duplicates -> prompt sort type (name -> power or ranking; power -> name or ranking)
+	//otherwise if there are no duplicate entries, it behaves the same as the normal scoreboard program
+	//by automatically printing the found entry.
+	//The input file for this program can be found at "scoreboardBonus.txt"
 	public static void main(String[] args) throws IOException {
 		//create arrayList of players
 		ArrayList<Player> players = new ArrayList<Player>();
@@ -30,6 +41,8 @@ public class ScoreboardBonus {
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found!");
 			System.exit(0);
+		} catch (IOException e) {
+			System.out.println("Reading error");
 		}
 //		for(int i = 0; i < players.size(); i++) { //testing
 //			System.out.println(players.get(i).getName());
@@ -112,7 +125,7 @@ public class ScoreboardBonus {
 							endIndex = i - 1;
 							break;
 						}
-						else { //element at i has the same name, new starting point is here
+						else { //element at i has the same name, new ending point is here
 							//check if power and rank are same
 							if(allSameRank) {
 								if(players.get(i).getRanking() != refRank) //there are different ranks within this name
@@ -180,7 +193,7 @@ public class ScoreboardBonus {
 		}
 		else if(mode == 2) { //search by power
 			System.out.println("Power search started");
-			Collections.sort(players, new SortByPowerAndAlpha()); //sort alphabetically within each power so that you can simply loop print
+			Collections.sort(players, new SortByPowerAndName()); //sort alphabetically within each power so that you can simply loop print
 			Comparator<Player> comparePower = new SortByPower(); //create comparator variable to compare players in this driver file
 			boolean keepAsking;
 			do {
