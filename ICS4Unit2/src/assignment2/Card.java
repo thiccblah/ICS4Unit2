@@ -17,6 +17,10 @@ public class Card {
 		this.obtained = obtained;
 	}
 	
+	public void addAttack(Attack a) {
+		attacks.add(a);
+	}
+	
 	public String getName() {
 		return name;
 	}

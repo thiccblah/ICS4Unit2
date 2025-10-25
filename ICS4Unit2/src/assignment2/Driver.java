@@ -138,7 +138,7 @@ public class Driver
 		}
 		else {
 			System.out.printf("%15s%15s\n", "Album number", "Date created");
-			for(int i = 0; i < albums.size(); i++) {
+			for(int i = 0; i < albums.size(); i++) { 
 				System.out.printf("%20d%20s\n", albums.get(i).getAlbumNumber(), albums.get(i).getCreatedDate());
 			}
 		}
@@ -157,22 +157,33 @@ public class Driver
 			}
 			Date createdDate = new Date(fileIn.readLine());
 			int maxCapacity = Integer.parseInt(fileIn.readLine());
-			Album temp = new Album(albumNumber, maxCapacity, createdDate); //finish the album and add to AL at the end
+			Album tempAlbum = new Album(albumNumber, maxCapacity, createdDate); //finish the album and add to AL at the end
 			
 			int cardCount = Integer.parseInt(fileIn.readLine());
 			String cardName;
 			int cardHP;
 			String cardType;
 			Date cardDate;
+			
 			int attackCount;
 			String attackNameAndDescription;
 			String attackDamage;
+			
 			for(int i = 0; i < cardCount; i++) {
 				cardName = fileIn.readLine();
 				cardHP = Integer.parseInt(fileIn.readLine());
 				cardType = fileIn.readLine();
 				cardDate = new Date(fileIn.readLine());
-				
+				Card tempCard = new Card(cardName, cardHP, cardType, cardDate);
+				attackCount = Integer.parseInt(fileIn.readLine());
+				for(int j = 0; j < attackCount; j++) {
+					attackNameAndDescription = fileIn.readLine();
+					attackDamage = fileIn.readLine();
+					if(attackNameAndDescription.indexOf('/') < 0) { //no dash, so no description
+						
+						
+					}
+				}
 			}
 			fileIn.close();
 		} catch (FileNotFoundException e) {
