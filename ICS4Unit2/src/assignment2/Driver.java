@@ -10,11 +10,26 @@ public class Driver
 	{
 		ArrayList<Album> albums = new ArrayList<>();
 		BufferedReader stdIn = new BufferedReader (new InputStreamReader (System.in));
-		int mainMenuChoice, subMenuChoice;
+		int mainMenuChoice, subMenuChoice, chosenAlbum;
 		mainMenuChoice = displayMenu (0, stdIn);
 
-		if (mainMenuChoice == 1)
+		if (mainMenuChoice == 1) {
 			subMenuChoice = displayMenu (1, stdIn);
+			if(subMenuChoice == 1) { //display all albums
+				listAlbums(albums);
+			}
+			else if(subMenuChoice == 2) {
+				chosenAlbum = promptAlbum(stdIn, albums);
+				if(chosenAlbum < -1) { //shouldn't happen
+					System.out.println("ERROR!!!!");
+				}
+				else if(chosenAlbum >= 0) {
+					System.out.println(albums.get(chosenAlbum));
+				}
+			}
+			
+		}
+
 		else if (mainMenuChoice == 2) {
 			//TODO prompt for album to access
 			subMenuChoice = displayMenu (2, stdIn);
@@ -79,30 +94,105 @@ public class Driver
 
 		return choice;
 	}
+
+	//returns the index of the chosen album (NOT THE ALBUM NUMBER)
+	public static int promptAlbum(BufferedReader in, ArrayList<Album> albums) {
+		if(albums.size() < 0) {
+			System.out.println("There are no albums to display... Please add an album to get started!");
+			return -1;
+		}
+		else {
+			System.out.println("Please choose an album from the numbers listed below:");
+			for(int i = 0; i < albums.size(); i++) {
+				System.out.printf("%5d", albums.get(i).getAlbumNumber());
+				if((i + 1) % 5 == 0) {
+					System.out.println();
+				}
+			}
+			int index;
+			boolean validInput;
+			do {
+				validInput = true;
+				try {
+					int inputNumber = Integer.parseInt(in.readLine());
+					Album key = new Album(inputNumber);
+					index = Collections.binarySearch(albums, key);
+					if(index < 0)
+						throw new NumberFormatException();
+					else
+						return index;
+				} catch (NumberFormatException e) {
+					validInput = false;
+					System.out.println("INVALID. Please enter a number from the list shown above.");
+				} catch (IOException e) {
+					System.out.println("BufferedReader error");
+				}
+			} while (!validInput);
+			return -999; //should be impossible
+		}
+	}
 	
 	public static void listAlbums(ArrayList<Album> albums) {
-		
+		if(albums.size() < 1) {
+			System.out.println("There are no albums to display... Please add an album to get started!");
+		}
+		else {
+			System.out.printf("%15s%15s\n", "Album number", "Date created");
+			for(int i = 0; i < albums.size(); i++) {
+				System.out.printf("%20d%20s\n", albums.get(i).getAlbumNumber(), albums.get(i).getCreatedDate());
+			}
+		}
 	}
-	
-	public static void albumInfo(Album a) {
-		
+
+	public static void addAlbum(String fileName, ArrayList<Album> albums) {
+		try {
+			BufferedReader fileIn = new BufferedReader(new FileReader(fileName));
+			int albumNumber = Integer.parseInt(fileIn.readLine());
+			Album key = new Album(albumNumber);
+			int position = Collections.binarySearch(albums, key);
+			if(position > 0) { //already exists an album with this number
+				System.out.println("There already exists an album with the number: " + albumNumber);
+				System.out.println("This album will NOT be added.");
+				return;
+			}
+			Date createdDate = new Date(fileIn.readLine());
+			int maxCapacity = Integer.parseInt(fileIn.readLine());
+			Album temp = new Album(albumNumber, maxCapacity, createdDate); //finish the album and add to AL at the end
+			
+			int cardCount = Integer.parseInt(fileIn.readLine());
+			String cardName;
+			int cardHP;
+			String cardType;
+			Date cardDate;
+			int attackCount;
+			String attackNameAndDescription;
+			String attackDamage;
+			for(int i = 0; i < cardCount; i++) {
+				cardName = fileIn.readLine();
+				cardHP = Integer.parseInt(fileIn.readLine());
+				cardType = fileIn.readLine();
+				cardDate = new Date(fileIn.readLine());
+				
+			}
+			fileIn.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found!");
+		} catch (IOException e) {
+			System.out.println("Reading error");
+		}
 	}
-	
-	public static void addAlbum(String fileName) {
-		
-	}
-	
+
 	public static void removeAlbum(int index) {
-		
+
 	}
-	
+
 	public static void removeAlbum(Date d) {
-		
+
 	}
-	
+
 	public static void showStatistics(ArrayList<Album> albums) {
-		
+
 	}
-	
+
 }
 

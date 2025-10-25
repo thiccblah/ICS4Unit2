@@ -17,6 +17,10 @@ public class Card {
 		this.obtained = obtained;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public String toString() {
 		return null;
 	}
