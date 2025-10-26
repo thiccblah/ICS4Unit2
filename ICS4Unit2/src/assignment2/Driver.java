@@ -11,29 +11,38 @@ public class Driver
 		ArrayList<Album> albums = new ArrayList<>();
 		BufferedReader stdIn = new BufferedReader (new InputStreamReader (System.in));
 		int mainMenuChoice, subMenuChoice, chosenAlbum;
-		mainMenuChoice = displayMenu (0, stdIn);
-
-		if (mainMenuChoice == 1) {
-			subMenuChoice = displayMenu (1, stdIn);
-			if(subMenuChoice == 1) { //display all albums
-				listAlbums(albums);
-			}
-			else if(subMenuChoice == 2) {
-				chosenAlbum = promptAlbum(stdIn, albums);
-				if(chosenAlbum < -1) { //shouldn't happen
-					System.out.println("ERROR!!!!");
-				}
-				else if(chosenAlbum >= 0) {
-					System.out.println(albums.get(chosenAlbum));
-				}
+		do {
+			mainMenuChoice = displayMenu (0, stdIn);
+			
+			if (mainMenuChoice == 1) {
+				do {
+					subMenuChoice = displayMenu (1, stdIn);
+					if(subMenuChoice == 1) { //display all albums
+						listAlbums(albums);
+					}
+					else if(subMenuChoice == 2) {
+						chosenAlbum = promptAlbum(stdIn, albums);
+						if(chosenAlbum < -1) { //shouldn't happen
+							System.out.println("ERROR!!!!");
+						}
+						else if(chosenAlbum >= 0) {
+							System.out.println(albums.get(chosenAlbum));
+						}
+					}
+					else if(subMenuChoice == 3) {
+						System.out.print("Enter the name of the album file: ");
+						addAlbum(stdIn.readLine(), albums);
+					}
+				} while (subMenuChoice != 6);
 			}
 			
-		}
-
-		else if (mainMenuChoice == 2) {
-			//TODO prompt for album to access
-			subMenuChoice = displayMenu (2, stdIn);
-		}
+			else if (mainMenuChoice == 2) {
+				do {
+					//TODO prompt for album to access
+					subMenuChoice = displayMenu (2, stdIn);
+				} while (subMenuChoice != 7);
+			}
+		} while (mainMenuChoice != 3);
 	}
 
 
@@ -137,9 +146,9 @@ public class Driver
 			System.out.println("There are no albums to display... Please add an album to get started!");
 		}
 		else {
-			System.out.printf("%15s%15s\n", "Album number", "Date created");
+			System.out.printf("%-20s%-20s\n", "Album number", "Date created");
 			for(int i = 0; i < albums.size(); i++) { 
-				System.out.printf("%20d%20s\n", albums.get(i).getAlbumNumber(), albums.get(i).getCreatedDate());
+				System.out.printf("%-20d%-20s\n", albums.get(i).getAlbumNumber(), albums.get(i).getCreatedDate());
 			}
 		}
 	}
@@ -153,6 +162,7 @@ public class Driver
 			if(position > 0) { //already exists an album with this number
 				System.out.println("There already exists an album with the number: " + albumNumber);
 				System.out.println("This album will NOT be added.");
+				fileIn.close();
 				return;
 			}
 			Date createdDate = new Date(fileIn.readLine());
@@ -166,7 +176,7 @@ public class Driver
 			Date cardDate;
 			
 			int attackCount;
-			String attackNameAndDescription;
+			String attackInfo;
 			String attackDamage;
 			
 			for(int i = 0; i < cardCount; i++) {
@@ -177,20 +187,26 @@ public class Driver
 				Card tempCard = new Card(cardName, cardHP, cardType, cardDate);
 				attackCount = Integer.parseInt(fileIn.readLine());
 				for(int j = 0; j < attackCount; j++) {
-					attackNameAndDescription = fileIn.readLine();
+					attackInfo = fileIn.readLine();
 					attackDamage = fileIn.readLine();
-					if(attackNameAndDescription.indexOf('/') < 0) { //no dash, so no description
-						
-						
+					if(attackInfo.indexOf('-') < 0) { //no dash, so no description
+						tempCard.addAttack(new Attack(attackInfo, null, attackDamage));
+					}
+					else {
+						tempCard.addAttack(new Attack(attackInfo.substring(0, attackInfo.indexOf('-') - 1), 
+								attackInfo.substring(attackInfo.indexOf('-') + 2), attackDamage));
 					}
 				}
+				tempAlbum.addCardFromFile(tempCard);
 			}
+			albums.add(-(position + 1), tempAlbum);
 			fileIn.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found!");
 		} catch (IOException e) {
 			System.out.println("Reading error");
 		}
+//		System.out.println("complete"); //testing
 	}
 
 	public static void removeAlbum(int index) {
