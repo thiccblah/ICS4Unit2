@@ -11,6 +11,7 @@ public class Driver
 		ArrayList<Album> albums = new ArrayList<>();
 		BufferedReader stdIn = new BufferedReader (new InputStreamReader (System.in));
 		int mainMenuChoice, subMenuChoice, chosenAlbum;
+		preloadAlbums(albums); //testing
 		do {
 			mainMenuChoice = displayMenu (0, stdIn);
 			
@@ -20,8 +21,8 @@ public class Driver
 					if(subMenuChoice == 1) { //display all albums
 						listAlbums(albums);
 					}
-					else if(subMenuChoice == 2) {
-						chosenAlbum = promptAlbum(stdIn, albums);
+					else if(subMenuChoice == 2) { //display one album
+						chosenAlbum = promptAlbum(stdIn, albums, 1);
 						if(chosenAlbum < -1) { //shouldn't happen
 							System.out.println("ERROR!!!!");
 						}
@@ -29,9 +30,19 @@ public class Driver
 							System.out.println(albums.get(chosenAlbum));
 						}
 					}
-					else if(subMenuChoice == 3) {
+					else if(subMenuChoice == 3) { //add an album
 						System.out.print("Enter the name of the album file: ");
-						addAlbum(stdIn.readLine(), albums);
+						addAlbum(appendExtension(stdIn.readLine()), albums);
+					}
+					else if(subMenuChoice == 4) { //remove an album
+						removeAlbum(stdIn, albums);
+					}
+					else if(subMenuChoice == 5) { //show statistics
+						showStatistics(albums);
+					}
+					else if(subMenuChoice == 6) {
+						System.out.println();
+						displayMenu(0, stdIn);
 					}
 				} while (subMenuChoice != 6);
 			}
@@ -105,19 +116,20 @@ public class Driver
 	}
 
 	//returns the index of the chosen album (NOT THE ALBUM NUMBER)
-	public static int promptAlbum(BufferedReader in, ArrayList<Album> albums) {
-		if(albums.size() < 0) {
+	public static int promptAlbum(BufferedReader in, ArrayList<Album> albums, int mode) {
+		if(albums.size() < 1) {
 			System.out.println("There are no albums to display... Please add an album to get started!");
 			return -1;
 		}
-		else {
+		if(mode == 1) {
 			System.out.println("Please choose an album from the numbers listed below:");
 			for(int i = 0; i < albums.size(); i++) {
-				System.out.printf("%5d", albums.get(i).getAlbumNumber());
+				System.out.printf("%-5d", albums.get(i).getAlbumNumber());
 				if((i + 1) % 5 == 0) {
 					System.out.println();
 				}
 			}
+			System.out.println();
 			int index;
 			boolean validInput;
 			do {
@@ -137,8 +149,36 @@ public class Driver
 					System.out.println("BufferedReader error");
 				}
 			} while (!validInput);
-			return -999; //should be impossible
 		}
+		else { //mode == 2
+			int uniqueDates = 1;
+			System.out.println("Please choose an album from the dates listed below:");
+			Album temp = new Album(-1, -1, albums.get(0).getCreatedDate());
+			System.out.println("1) " + temp.getCreatedDate());
+			for(int i = 1; i < albums.size(); i++) {
+				if(!temp.equals(albums.get(i))) { //unique date, print
+					temp.setCreatedDate(albums.get(i).getCreatedDate());
+					System.out.println(++uniqueDates + ") " + albums.get(i).getCreatedDate());
+				}
+			}
+			boolean validInput;
+			do {
+				validInput = true;
+				try {
+					int inputNumber = Integer.parseInt(in.readLine());
+					if(inputNumber < 1 || inputNumber > uniqueDates) { //out of range of number of dates
+						throw new NumberFormatException();
+					}
+					return inputNumber - 1; //to counteract counting from 1
+				} catch (NumberFormatException e) {
+					validInput = false;
+					System.out.println("INVALID. Please choose a date numbered in the list above.");
+				} catch (IOException e) {
+					System.out.println("Reading error");
+				}
+			} while (!validInput);
+		}
+		return -999; //should be impossible
 	}
 	
 	public static void listAlbums(ArrayList<Album> albums) {
@@ -159,7 +199,8 @@ public class Driver
 			int albumNumber = Integer.parseInt(fileIn.readLine());
 			Album key = new Album(albumNumber);
 			int position = Collections.binarySearch(albums, key);
-			if(position > 0) { //already exists an album with this number
+//			System.out.println(position);
+			if(position >= 0) { //already exists an album with this number
 				System.out.println("There already exists an album with the number: " + albumNumber);
 				System.out.println("This album will NOT be added.");
 				fileIn.close();
@@ -199,7 +240,7 @@ public class Driver
 				}
 				tempAlbum.addCardFromFile(tempCard);
 			}
-			albums.add(-(position + 1), tempAlbum);
+			albums.add(-(position + 1), tempAlbum); //add album into AL using insertion point
 			fileIn.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found!");
@@ -209,17 +250,87 @@ public class Driver
 //		System.out.println("complete"); //testing
 	}
 
-	public static void removeAlbum(int index) {
-
-	}
-
-	public static void removeAlbum(Date d) {
-
+	public static void removeAlbum(BufferedReader stdIn, ArrayList<Album> albums) {
+		if(albums.size() < 1) {
+			System.out.println("There are no albums to remove... Please add an album to get started!");
+			return;
+		}
+		boolean validInput;
+		int modeChoice = -1;
+		do {
+			System.out.println("Please select the remove mode:\n"
+					+ "1) Remove by album #\n"
+					+ "2) Remove by date");
+			validInput = true;
+			try {
+				modeChoice = Integer.parseInt(stdIn.readLine());
+				if(modeChoice > 2 || modeChoice < 1) {
+					throw new NumberFormatException();
+				}
+			} catch (NumberFormatException e) {
+				validInput = false;
+				System.out.print("INVALID. ");
+			} catch (IOException e) {
+				validInput = false;
+				System.out.println("Reader error. ");
+			}
+		} while (!validInput);
+		if(modeChoice == 1) { //remove by album #
+			albums.remove(promptAlbum(stdIn, albums, 1));
+			System.out.println("1 album removed."); //there can only be one album for each album number
+		}
+		else { //remove by date
+			Collections.sort(albums, new SortByDate());
+			int index = promptAlbum(stdIn, albums, 2);
+//			System.out.println(index);
+			Album key = new Album(0, 0, albums.get(index).getCreatedDate());
+			int leftBound = index;
+			for(int i = index - 1; i >= 0; i--) { //search left
+				if(!key.equals(albums.get(i))) { //not the same, left bound is the element to the right
+					leftBound = i + 1;
+				}
+			}
+//			System.out.println(leftBound);
+			//remember to check that leftBound is valid since AL gets resized
+			int albumsRemoved = 0;
+			while(leftBound < albums.size() && albums.get(leftBound).equals(key)) { //while album at left bound has same date as key
+				System.out.println("Removed album #" + albums.get(leftBound).getAlbumNumber() + ".");
+				albumsRemoved++;
+				albums.remove(leftBound); //sorted list
+			}
+			System.out.println(albumsRemoved + " albums removed.");
+			Collections.sort(albums); //resort albums back by album #
+		}
 	}
 
 	public static void showStatistics(ArrayList<Album> albums) {
-
+		if(albums.size() < 1) {
+			System.out.println("There are no albums to remove... Please add an album to get started!");
+			return;
+		}
+		for(int i = 0; i < albums.size(); i++) {
+			System.out.print(String.format("%-12s", "Album #" + albums.get(i).getAlbumNumber() + ": "));
+			System.out.println(albums.get(i).getCards().size() + " out of " + albums.get(i).getMaxCapacity());
+			System.out.println(String.format("%12s%.1f", "Average HP: ", 0.0 + albums.get(i).getAlbumTotalHP() / albums.get(i).getCards().size()));
+		}
+		System.out.print(String.format("%-12s", "ALL albums: "));
+		System.out.println(Album.getTotalCards() + " out of " + Album.getTotalCapacity());
+		System.out.println(String.format("%12s%.5f", "Average HP: ", 0.0 + Album.getTotalHP() / Album.getTotalCards()));
 	}
 
+	public static String appendExtension(String data) {
+		if(data.length() < 4)
+			return data;
+		if(data.substring(data.length() - 4).equals(".txt"))
+			return data;
+		else
+			return data + ".txt";
+	}
+	
+	public static void preloadAlbums(ArrayList<Album> albums) {
+		addAlbum("Album1.txt", albums);
+		addAlbum("Album2.txt", albums);
+		addAlbum("Album5.txt", albums);
+	}
 }
 

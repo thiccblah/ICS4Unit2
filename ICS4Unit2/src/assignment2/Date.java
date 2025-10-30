@@ -11,7 +11,24 @@ public class Date {
 		year = Integer.parseInt(data.substring(data.lastIndexOf('/') + 1));
 	}
 	
+	//getters
+	public int getMonth() {
+		return month;
+	}
+	
+	public int getDay() {
+		return day;
+	}
+	
+	public int getYear() {
+		return year;
+	}
+	
 	public String toString() {
 		return month + "/" + day + "/" + year;
+	}
+	
+	public boolean equals(Date d) {
+		return month == d.month && day == d.day && year == d.year; 
 	}
 }
