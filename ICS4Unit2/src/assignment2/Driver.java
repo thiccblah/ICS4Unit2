@@ -40,17 +40,22 @@ public class Driver
 					else if(subMenuChoice == 5) { //show statistics
 						showStatistics(albums);
 					}
-					else if(subMenuChoice == 6) {
-						System.out.println();
-						displayMenu(0, stdIn);
-					}
-				} while (subMenuChoice != 6);
+				} while (subMenuChoice != 6); //return to menu
 			}
 			
 			else if (mainMenuChoice == 2) {
 				do {
-					//TODO prompt for album to access
 					subMenuChoice = displayMenu (2, stdIn);
+					if(subMenuChoice == 7) {
+						break;
+					}
+					chosenAlbum = promptAlbum(stdIn, albums, 1);
+					if(subMenuChoice == 1) { //display all cards in a deck (last sorted order)
+						albums.get(chosenAlbum).displayCards();
+					}
+					else if(subMenuChoice == 2) { //stats on one card
+						albums.get(chosenAlbum).cardInfo();
+					}
 				} while (subMenuChoice != 7);
 			}
 		} while (mainMenuChoice != 3);
@@ -121,7 +126,7 @@ public class Driver
 			System.out.println("There are no albums to display... Please add an album to get started!");
 			return -1;
 		}
-		if(mode == 1) {
+		if(mode == 1) { //select by album #
 			System.out.println("Please choose an album from the numbers listed below:");
 			for(int i = 0; i < albums.size(); i++) {
 				System.out.printf("%-5d", albums.get(i).getAlbumNumber());
@@ -150,7 +155,7 @@ public class Driver
 				}
 			} while (!validInput);
 		}
-		else { //mode == 2
+		else { //mode == 2; select by date (selects all albums with the same date)
 			int uniqueDates = 1;
 			System.out.println("Please choose an album from the dates listed below:");
 			Album temp = new Album(-1, -1, albums.get(0).getCreatedDate());

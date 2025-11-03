@@ -1,5 +1,8 @@
 package assignment2;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Album implements Comparable<Album> {
@@ -80,11 +83,29 @@ public class Album implements Comparable<Album> {
 	}
 	
 	public void displayCards() {
-		
+		System.out.println("This album has " + cards.size() + " cards:\n");
+		for(int i = 0; i < cards.size(); i++) {
+			System.out.println(cards.get(i) + "\n");
+		}
 	}
 	
-	public void cardInfo(int index) {
-		//could remove this for a toString in card.java
+	public void cardInfo() {
+		int index = promptCard();
+		if(index >= 0) {
+			Card temp = cards.get(index);
+			System.out.println("Name: " + temp.getName());
+			System.out.println("HP: " + temp.getHP());
+			System.out.print("Attack");
+			if(cards.get(index).getAttacks().size() > 1) {
+				System.out.print("s");
+			}
+			System.out.println(":");
+			for(int i = 0; i < temp.getAttacks().size(); i++) {
+				System.out.println(temp.getAttacks().get(i));
+			}
+			System.out.println("Date acquired:");
+			System.out.println(temp.getDateObtained());
+		}
 	}
 
 	public void addCardFromInput(Card c) {
@@ -122,6 +143,38 @@ public class Album implements Comparable<Album> {
 	
 	public void sortDislay(int sortMode) {
 		
+	}
+	
+	public int promptCard() {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		if(cards.size() < 1) {
+			System.out.println("There are no cards to display... Please add a card to get started!");
+			return -1;
+		}
+		System.out.println("Please choose a card from the cards listed below:");
+		for(int i = 0; i < cards.size(); i++) {
+			System.out.println(i + 1 + ")");
+			System.out.println(cards.get(i) + "\n");
+		}
+		int index = 0;
+		boolean validInput;
+		do {
+			validInput = true;
+			try {
+				index = Integer.parseInt(in.readLine()) - 1; //match natural number with index (-1)
+//				System.out.println(index);
+				if(index < 0 || index >= cards.size()) {
+					throw new NumberFormatException();
+				}
+			} catch (NumberFormatException e) {
+				validInput = false;
+				System.out.println("INVALID. Please enter a number from the list show above.");
+			} catch (IOException e) {
+				validInput = false;
+				System.out.println("Reading error");
+			}
+		} while (!validInput);
+		return index;
 	}
 }
 

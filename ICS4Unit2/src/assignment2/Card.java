@@ -6,15 +6,15 @@ public class Card {
 	private String name;
 	private int HP;
 	private String type;
-	private Date obtained;
+	private Date dateObtained;
 	private ArrayList<Attack> attacks;
 	
-	public Card(String name, int HP, String type, Date obtained) {
+	public Card(String name, int HP, String type, Date dateObtained) {
 		attacks = new ArrayList<>();
 		this.name = name;
 		this.HP = HP;
 		this.type = type;
-		this.obtained = obtained;
+		this.dateObtained = dateObtained;
 	}
 	
 	public int getHP() {
@@ -29,8 +29,16 @@ public class Card {
 		return name;
 	}
 	
+	public ArrayList<Attack> getAttacks() {
+		return attacks;
+	}
+	
+	public Date getDateObtained() {
+		return dateObtained;
+	}
+	
 	public String toString() {
-		return null;
+		return String.format("Name: %s%nDate Obtained: %s", name, dateObtained);
 	}
 	
 	public int compareTo(Card c) {
