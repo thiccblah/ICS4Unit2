@@ -1,5 +1,10 @@
 package assignment2;
 
+//Nathan Chan November 3, 2025
+//Date class
+//This is the class file for the Date type, which is an object that stores
+//a date three ints: month, day, and year.
+//Date objects are used to store significant dates for both Album and Card objects.
 public class Date {
 	private int month;
 	private int day;

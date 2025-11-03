@@ -3,6 +3,10 @@ package assignment2;
 import java.io.*;
 import java.util.*;
 
+//Nathan Chan November 3, 2025
+//Assignment 4: Pokemon Cards collection!
+//This file is the driver class for the pokemon collection, which handles
+//the bulk of the program (prompting albums, loading menus, etc.)
 public class Driver
 {
 
@@ -45,23 +49,31 @@ public class Driver
 			
 			else if (mainMenuChoice == 2) {
 				do {
-					subMenuChoice = displayMenu (2, stdIn);
+					subMenuChoice = displayMenu (2, stdIn); //prompt menu item
 					if(subMenuChoice == 7) {
 						break;
 					}
-					chosenAlbum = promptAlbum(stdIn, albums, 1);
+					chosenAlbum = promptAlbum(stdIn, albums, 1); //prompt album
 					if(subMenuChoice == 1) { //display all cards in a deck (last sorted order)
 						albums.get(chosenAlbum).displayCards();
 					}
 					else if(subMenuChoice == 2) { //stats on one card
 						albums.get(chosenAlbum).cardInfo();
 					}
+					else if(subMenuChoice == 3) { //add a card
+						albums.get(chosenAlbum).addCardFromInput();
+					}
 				} while (subMenuChoice != 7);
 			}
 		} while (mainMenuChoice != 3);
+		
+		stdIn.close();
 	}
 
-
+	//This method displays a menu and prompts for input, handling invalid cases
+	//int menuNum is used to define the specific menu to show, BF stdIn is the BF used for
+	//user input.
+	//returns an int representing the chosen menu item.
 	public static int displayMenu (int menuNum, BufferedReader stdIn) throws IOException
 	{
 		int highestOption = 1;
@@ -116,10 +128,13 @@ public class Driver
 			}
 		} while (!validInput);
 
-
 		return choice;
 	}
 
+	//this method prompts the user for album(s) to be selected for an operation. 
+	//BF in is the BF for user input, AL<Album> albums is the AL of album objects available,
+	//int mode differentiates the mode (mode 1 - select by album #; mode 2 - select by date(all albums
+	//w/ same date).
 	//returns the index of the chosen album (NOT THE ALBUM NUMBER)
 	public static int promptAlbum(BufferedReader in, ArrayList<Album> albums, int mode) {
 		if(albums.size() < 1) {
@@ -186,6 +201,9 @@ public class Driver
 		return -999; //should be impossible
 	}
 	
+	//this method lists the numbers and created dates of all available albums
+	//AL<Album> albums is the AL of available albums
+	//returns nothing
 	public static void listAlbums(ArrayList<Album> albums) {
 		if(albums.size() < 1) {
 			System.out.println("There are no albums to display... Please add an album to get started!");
@@ -198,6 +216,10 @@ public class Driver
 		}
 	}
 
+	//this method adds an album given a .txt file.
+	//String fileName is the file name of the file to be read from
+	//AL<Album> albums is the AL of album objects (to add the album to)
+	//returns nothing
 	public static void addAlbum(String fileName, ArrayList<Album> albums) {
 		try {
 			BufferedReader fileIn = new BufferedReader(new FileReader(fileName));
@@ -255,6 +277,9 @@ public class Driver
 //		System.out.println("complete"); //testing
 	}
 
+	//prompts user for album(s) and removes album(s) either by album # or by date created
+	//BF stdIn is the BF for user input, AL<Album> albums is the AL of albums
+	//returns nothing
 	public static void removeAlbum(BufferedReader stdIn, ArrayList<Album> albums) {
 		if(albums.size() < 1) {
 			System.out.println("There are no albums to remove... Please add an album to get started!");
@@ -308,9 +333,12 @@ public class Driver
 		}
 	}
 
+	//shows statistics of every album individually and then the statistics of the whole collection
+	//AL<Album> albums is the AL of available albums
+	//returns nothing
 	public static void showStatistics(ArrayList<Album> albums) {
 		if(albums.size() < 1) {
-			System.out.println("There are no albums to remove... Please add an album to get started!");
+			System.out.println("There are no albums to show... Please add an album to get started!");
 			return;
 		}
 		for(int i = 0; i < albums.size(); i++) {
@@ -323,6 +351,10 @@ public class Driver
 		System.out.println(String.format("%12s%.5f", "Average HP: ", 0.0 + Album.getTotalHP() / Album.getTotalCards()));
 	}
 
+	//appends .txt to file name if not already present
+	//i.e. album -> album.txt; album.txt -> album.txt
+	//String data is the string to ensure the extension of
+	//returns the resulting String
 	public static String appendExtension(String data) {
 		if(data.length() < 4)
 			return data;
@@ -332,6 +364,9 @@ public class Driver
 			return data + ".txt";
 	}
 	
+	//for testing, preloads the 3 provided albums
+	//AL<Album> albums is the AL of albums
+	//returns nothing
 	public static void preloadAlbums(ArrayList<Album> albums) {
 		addAlbum("Album1.txt", albums);
 		addAlbum("Album2.txt", albums);

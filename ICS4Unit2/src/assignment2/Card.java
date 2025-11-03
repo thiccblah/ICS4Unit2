@@ -2,6 +2,12 @@ package assignment2;
 
 import java.util.ArrayList;
 
+//Nathan Chan November 3, 2025
+//Card class
+//This is the class file for the Card class.
+//Card Objects are based upon pokemon cards, with each card having a name, HP, attacks
+//, attack descriptions, etc.
+//The card object is found in the cards arrayList of Album objects.
 public class Card {
 	private String name;
 	private int HP;
@@ -35,6 +41,10 @@ public class Card {
 	
 	public Date getDateObtained() {
 		return dateObtained;
+	}
+	
+	public void setAttacks(ArrayList<Attack> attacks) {
+		this.attacks = attacks;
 	}
 	
 	public String toString() {
