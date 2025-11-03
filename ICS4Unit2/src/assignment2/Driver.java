@@ -305,7 +305,7 @@ public class Driver
 
 	public static void showStatistics(ArrayList<Album> albums) {
 		if(albums.size() < 1) {
-			System.out.println("There are no albums to remove... Please add an album to get started!");
+			System.out.println("There are no albums to display... Please add an album to get started!");
 			return;
 		}
 		for(int i = 0; i < albums.size(); i++) {
