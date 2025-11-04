@@ -215,7 +215,43 @@ public class Album implements Comparable<Album> {
 	}
 	
 	public void removeCard(int index) {
-		//find all cards that are the same through searching left and right
+		if(cards.size() <= 0) {
+			System.out.println("There are no cards in this album..."
+					+ "\nPlease add a card to get started!");
+			return;
+		}
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Listed below is a list of all cards:");
+		for(int i = 0; i < cards.size(); i++) {
+			System.out.println("Name: " + cards.get(i).getName());
+			System.out.println("HP: " + cards.get(i).getHP());
+			System.out.println("Date Obtained: " + cards.get(i).getDateObtained());
+		}
+		System.out.println("Please select a mode: "
+				+ "\n1) Remove by name"
+				+ "\n2) Remove by HP"
+				+ "\n3) Remove by Date Obtained");
+		int modeSelection = 0;
+		boolean validInput;
+		do {
+			validInput = true;
+			try {
+				modeSelection = Integer.parseInt(in.readLine());
+				if(modeSelection < 1 || modeSelection > 3) {
+					throw new NumberFormatException();
+				}
+			} catch (NumberFormatException e) {
+				validInput = false;
+				System.out.println("INVALID. Please enter an integer from 1 to 3.");
+			} catch (IOException e) {
+				validInput = false;
+				System.out.println("reader error");
+			}
+		} while (!validInput);
+		
+		if(modeSelection == 1) { //remove by name
+			
+		}
 	}
 	
 	public void editAttack(int cardIndex) {

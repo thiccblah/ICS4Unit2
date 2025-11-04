@@ -8,7 +8,7 @@ import java.util.ArrayList;
 //Card Objects are based upon pokemon cards, with each card having a name, HP, attacks
 //, attack descriptions, etc.
 //The card object is found in the cards arrayList of Album objects.
-public class Card {
+public class Card implements Comparable<Card> {
 	private String name;
 	private int HP;
 	private String type;
@@ -53,6 +53,6 @@ public class Card {
 	
 	public int compareTo(Card c) {
 		//sort by name
-		return 0;
+		return name.compareTo(c.getName()); 
 	}
 }
