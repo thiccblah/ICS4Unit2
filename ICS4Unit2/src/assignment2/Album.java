@@ -249,6 +249,7 @@ public class Album implements Comparable<Album> {
 			}
 		} while (!validInput);
 		
+		//MAKE SURE TO UPDATE STATIC VARIABLES!!!!!!
 		if(modeSelection == 1) { //remove by name
 			
 		}

@@ -328,7 +328,7 @@ public class Driver
 				albumsRemoved++;
 				albums.remove(leftBound); //sorted list
 			}
-			System.out.println(albumsRemoved + " albums removed.");
+			System.out.println(albumsRemoved + " album(s) removed.");
 			Collections.sort(albums); //resort albums back by album #
 		}
 	}
@@ -343,12 +343,12 @@ public class Driver
 		}
 		for(int i = 0; i < albums.size(); i++) {
 			System.out.print(String.format("%-12s", "Album #" + albums.get(i).getAlbumNumber() + ": "));
-			System.out.println(albums.get(i).getCards().size() + " out of " + albums.get(i).getMaxCapacity());
-			System.out.println(String.format("%12s%.1f", "Average HP: ", 0.0 + albums.get(i).getAlbumTotalHP() / albums.get(i).getCards().size()));
+			System.out.println(albums.get(i).getCards().size() + " out of " + albums.get(i).getMaxCapacity() + " cards");
+			System.out.println(String.format("%12s%.1f", "Average HP: ", 1.0 * albums.get(i).getAlbumTotalHP() / (double) albums.get(i).getCards().size()));
 		}
 		System.out.print(String.format("%-12s", "ALL albums: "));
 		System.out.println(Album.getTotalCards() + " out of " + Album.getTotalCapacity());
-		System.out.println(String.format("%12s%.5f", "Average HP: ", 0.0 + Album.getTotalHP() / Album.getTotalCards()));
+		System.out.println(String.format("%12s%.1f", "Average HP: ", Album.getTotalHP() / (double) Album.getTotalCards()));
 	}
 
 	//appends .txt to file name if not already present
