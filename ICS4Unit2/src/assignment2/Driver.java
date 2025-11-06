@@ -172,11 +172,14 @@ public class Driver
 		}
 		else { //mode == 2; select by date (selects all albums with the same date)
 			int uniqueDates = 1;
+			int[] dateIndexes = new int[albums.size()]; //first date is at index 1, so add one more slot
 			System.out.println("Please choose an album from the dates listed below:");
 			Album temp = new Album(-1, -1, albums.get(0).getCreatedDate());
 			System.out.println("1) " + temp.getCreatedDate());
 			for(int i = 1; i < albums.size(); i++) {
 				if(!temp.equals(albums.get(i))) { //unique date, print
+					//set index of uniqueDates
+					dateIndexes[uniqueDates] = i;
 					temp.setCreatedDate(albums.get(i).getCreatedDate());
 					System.out.println(++uniqueDates + ") " + albums.get(i).getCreatedDate());
 				}
@@ -189,7 +192,7 @@ public class Driver
 					if(inputNumber < 1 || inputNumber > uniqueDates) { //out of range of number of dates
 						throw new NumberFormatException();
 					}
-					return inputNumber - 1; //to counteract counting from 1
+					return dateIndexes[inputNumber - 1];
 				} catch (NumberFormatException e) {
 					validInput = false;
 					System.out.println("INVALID. Please choose a date numbered in the list above.");
@@ -311,6 +314,7 @@ public class Driver
 		}
 		else { //remove by date
 			Collections.sort(albums, new SortByDate());
+			listAlbums(albums);
 			int index = promptAlbum(stdIn, albums, 2);
 //			System.out.println(index);
 			Album key = new Album(0, 0, albums.get(index).getCreatedDate());
@@ -318,8 +322,10 @@ public class Driver
 			for(int i = index - 1; i >= 0; i--) { //search left
 				if(!key.equals(albums.get(i))) { //not the same, left bound is the element to the right
 					leftBound = i + 1;
+					break;
 				}
 			}
+//			System.out.println(leftBound + "leftBound");
 //			System.out.println(leftBound);
 			//remember to check that leftBound is valid since AL gets resized
 			int albumsRemoved = 0;
