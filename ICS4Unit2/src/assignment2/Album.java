@@ -255,10 +255,12 @@ public class Album implements Comparable<Album> {
 			Collections.sort(cards, new SortCardByName()); //sort every time since array is changing
 			System.out.print("Enter the name of the card to remove: ");
 			int index = 0;
+			Card key = null; //to avoid initialization error
 			do {
 				validInput = true;
 				try {
-					index = Collections.binarySearch(cards, new Card(in.readLine().trim(), 0, "", new Date("0/0/0")), new SortCardByName());
+					key = new Card(in.readLine().trim(), 0, "", new Date("0/0/0"));
+					index = Collections.binarySearch(cards, key, new SortCardByName());
 				} catch (IOException e) {
 					System.out.println("Reading error");
 				}
@@ -268,8 +270,11 @@ public class Album implements Comparable<Album> {
 				}
 			} while (validInput);
 			//find the left bound of this name
+			int leftBound = index;
 			for(int i = index - 1; i >= 0; i--) {
-				
+				if(!key.equals(cards.get(i))) { //not the same, left bound is the element to the right
+					leftBound = i + 1;
+				}
 			}
 		}
 	}
