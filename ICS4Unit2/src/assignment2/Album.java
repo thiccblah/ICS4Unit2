@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 
 //Nathan Chan November 3, 2025
 //Album class
@@ -214,14 +215,14 @@ public class Album implements Comparable<Album> {
 		}
 	}
 	
-	public void removeCard(int index) {
+	public void removeCard() {
 		if(cards.size() <= 0) {
 			System.out.println("There are no cards in this album..."
 					+ "\nPlease add a card to get started!");
 			return;
 		}
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Listed below is a list of all cards:");
+		System.out.println("Listed below are all the cards in this album:");
 		for(int i = 0; i < cards.size(); i++) {
 			System.out.println("Name: " + cards.get(i).getName());
 			System.out.println("HP: " + cards.get(i).getHP());
@@ -251,7 +252,25 @@ public class Album implements Comparable<Album> {
 		
 		//MAKE SURE TO UPDATE STATIC VARIABLES!!!!!!
 		if(modeSelection == 1) { //remove by name
-			
+			Collections.sort(cards, new SortCardByName()); //sort every time since array is changing
+			System.out.print("Enter the name of the card to remove: ");
+			int index = 0;
+			do {
+				validInput = true;
+				try {
+					index = Collections.binarySearch(cards, new Card(in.readLine().trim(), 0, "", new Date("0/0/0")), new SortCardByName());
+				} catch (IOException e) {
+					System.out.println("Reading error");
+				}
+				if(index < 0) {
+					System.out.println("There is no card with that name!\n"
+							+ "Please enter a name from the list above.");
+				}
+			} while (validInput);
+			//find the left bound of this name
+			for(int i = index - 1; i >= 0; i--) {
+				
+			}
 		}
 	}
 	

@@ -310,7 +310,7 @@ public class Driver
 			System.out.println("1 album removed."); //there can only be one album for each album number
 		}
 		else { //remove by date
-			Collections.sort(albums, new SortByDate());
+			Collections.sort(albums, new SortAlbumByDate());
 			int index = promptAlbum(stdIn, albums, 2);
 //			System.out.println(index);
 			Album key = new Album(0, 0, albums.get(index).getCreatedDate());
