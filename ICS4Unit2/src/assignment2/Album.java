@@ -368,8 +368,23 @@ public class Album implements Comparable<Album> {
 		}
 	}
 	
-	public void editAttack(int cardIndex) {
-		
+	public void editAttack() {
+		int cardIndex = promptCard();
+		if(cardIndex >= 0) {
+			int attackIndex = cards.get(cardIndex).promptAttack();
+			if(attackIndex >= 0) {
+				boolean validInput;
+				int modeChoice = 0;
+				do {
+					validInput = true;
+					System.out.println("Please select a field to edit: "
+							+ "\n1) Name"
+							+ "\n2) Description"
+							+ "\n3) Damage");
+					
+				} while (!validInput);
+			}
+		}
 	}
 	
 	public void sortDislay(int sortMode) {

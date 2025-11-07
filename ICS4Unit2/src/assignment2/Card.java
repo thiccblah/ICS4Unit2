@@ -1,5 +1,8 @@
 package assignment2;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 //Nathan Chan November 3, 2025
@@ -45,6 +48,38 @@ public class Card implements Comparable<Card> {
 	
 	public void setAttacks(ArrayList<Attack> attacks) {
 		this.attacks = attacks;
+	}
+	
+	public int promptAttack() {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		if(attacks.size() < 1) {
+			System.out.println("There are no attacks to display...");
+			return -1;
+		}
+		System.out.println("Please choose an attack from the cards listed below:");
+		for(int i = 0; i < attacks.size(); i++) {
+			System.out.println(i + 1 + ")");
+			System.out.println(attacks.get(i) + "\n");
+		}
+		int index = 0;
+		boolean validInput;
+		do {
+			validInput = true;
+			try {
+				index = Integer.parseInt(in.readLine()) - 1; //match natural number with index (-1)
+//				System.out.println(index);
+				if(index < 0 || index >= attacks.size()) {
+					throw new NumberFormatException();
+				}
+			} catch (NumberFormatException e) {
+				validInput = false;
+				System.out.println("INVALID. Please enter a number from the list show above.");
+			} catch (IOException e) {
+				validInput = false;
+				System.out.println("Reading error");
+			}
+		} while (!validInput);
+		return index;
 	}
 	
 	public String toString() {
