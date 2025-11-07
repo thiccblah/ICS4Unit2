@@ -261,20 +261,32 @@ public class Album implements Comparable<Album> {
 				try {
 					key = new Card(in.readLine().trim(), 0, "", new Date("0/0/0"));
 					index = Collections.binarySearch(cards, key, new SortCardByName());
+					if(index < 0) {
+						System.out.println("There is no card with that name!\n"
+								+ "Please enter a name from the list above.");
+						validInput = false;
+					}
 				} catch (IOException e) {
+					validInput = false;
 					System.out.println("Reading error");
 				}
-				if(index < 0) {
-					System.out.println("There is no card with that name!\n"
-							+ "Please enter a name from the list above.");
-				}
-			} while (validInput);
+			} while (!validInput);
 			//find the left bound of this name
 			int leftBound = index;
 			for(int i = index - 1; i >= 0; i--) {
 				if(!key.equals(cards.get(i))) { //not the same, left bound is the element to the right
 					leftBound = i + 1;
+					break;
 				}
+			}
+			System.out.println(leftBound);
+			while(leftBound < cards.size() && cards.get(leftBound).getName().equalsIgnoreCase(key.getName())) { //while card at left bound has same name as key
+				//increment static variables
+				totalCards--;
+				totalHP -= cards.get(leftBound).getHP(); //class variable
+				albumTotalHP -= cards.get(leftBound).getHP(); //instance variable
+				
+				cards.remove(leftBound); //sorted list
 			}
 		}
 	}

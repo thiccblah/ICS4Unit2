@@ -63,6 +63,9 @@ public class Driver
 					else if(subMenuChoice == 3) { //add a card
 						albums.get(chosenAlbum).addCardFromInput();
 					}
+					else if(subMenuChoice == 4) { //remove a card
+						albums.get(chosenAlbum).removeCard();
+					}
 				} while (subMenuChoice != 7);
 			}
 		} while (mainMenuChoice != 3);
