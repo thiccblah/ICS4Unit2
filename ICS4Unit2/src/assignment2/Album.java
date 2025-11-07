@@ -222,28 +222,35 @@ public class Album implements Comparable<Album> {
 			return;
 		}
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Listed below are all the cards in this album:");
-		for(int i = 0; i < cards.size(); i++) {
-			System.out.println("Name: " + cards.get(i).getName());
-			System.out.println("HP: " + cards.get(i).getHP());
-			System.out.println("Date Obtained: " + cards.get(i).getDateObtained());
-		}
+		//display first and last card based on current sort
+		System.out.println("First listed card: ");
+		System.out.println("Name: " + cards.get(0).getName());
+		System.out.println("HP: " + cards.get(0).getHP());
+		System.out.println("Date Obtained: " + cards.get(0).getDateObtained());
+		
+		System.out.println("Last listed card: ");
+		int lastIndex = cards.size() - 1;
+		System.out.println("Name: " + cards.get(lastIndex).getName());
+		System.out.println("HP: " + cards.get(lastIndex).getHP());
+		System.out.println("Date Obtained: " + cards.get(lastIndex).getDateObtained());
+		
 		System.out.println("Please select a mode: "
 				+ "\n1) Remove by name"
 				+ "\n2) Remove by HP"
-				+ "\n3) Remove by Date Obtained");
+				+ "\n3) First listed card"
+				+ "\n4) Last listed card");
 		int modeSelection = 0;
 		boolean validInput;
 		do {
 			validInput = true;
 			try {
 				modeSelection = Integer.parseInt(in.readLine());
-				if(modeSelection < 1 || modeSelection > 3) {
+				if(modeSelection < 1 || modeSelection > 4) {
 					throw new NumberFormatException();
 				}
 			} catch (NumberFormatException e) {
 				validInput = false;
-				System.out.println("INVALID. Please enter an integer from 1 to 3.");
+				System.out.println("INVALID. Please enter an integer from 1 to 4.");
 			} catch (IOException e) {
 				validInput = false;
 				System.out.println("reader error");
@@ -253,6 +260,12 @@ public class Album implements Comparable<Album> {
 		//MAKE SURE TO UPDATE STATIC VARIABLES!!!!!!
 		if(modeSelection == 1) { //remove by name
 			Collections.sort(cards, new SortCardByName()); //sort every time since array is changing
+			System.out.println("Listed below are all the cards in this album:"); //print all cards
+			for(int i = 0; i < cards.size(); i++) {
+				System.out.println("Name: " + cards.get(i).getName());
+				System.out.println("HP: " + cards.get(i).getHP());
+				System.out.println("Date Obtained: " + cards.get(i).getDateObtained());
+			}
 			System.out.print("Enter the name of the card to remove: ");
 			int index = 0;
 			Card key = null; //to avoid initialization error
@@ -274,12 +287,12 @@ public class Album implements Comparable<Album> {
 			//find the left bound of this name
 			int leftBound = index;
 			for(int i = index - 1; i >= 0; i--) {
-				if(!key.equals(cards.get(i))) { //not the same, left bound is the element to the right
+				if(!key.getName().equals(cards.get(i).getName())) { //not the same, left bound is the element to the right
 					leftBound = i + 1;
 					break;
 				}
 			}
-			System.out.println(leftBound);
+//			System.out.println(leftBound);
 			while(leftBound < cards.size() && cards.get(leftBound).getName().equalsIgnoreCase(key.getName())) { //while card at left bound has same name as key
 				//increment static variables
 				totalCards--;
@@ -288,6 +301,70 @@ public class Album implements Comparable<Album> {
 				
 				cards.remove(leftBound); //sorted list
 			}
+		}
+		else if(modeSelection == 2) { //remove by HP
+			Collections.sort(cards, new SortCardbyHP());
+			System.out.println("Listed below are all the cards in this album:");
+			for(int i = 0; i < cards.size(); i++) {
+				System.out.println("Name: " + cards.get(i).getName());
+				System.out.println("HP: " + cards.get(i).getHP());
+				System.out.println("Date Obtained: " + cards.get(i).getDateObtained());
+			}
+			System.out.print("Enter the HP to remove: ");
+			
+			int index = 0;
+			Card key = null; //to avoid initialization error
+			do {
+				validInput = true;
+				try {
+					key = new Card("", Integer.parseInt(in.readLine().trim()), "", new Date("0/0/0"));
+					index = Collections.binarySearch(cards, key, new SortCardbyHP());
+					if(index < 0) {
+						System.out.println("There is no card with that HP!\n"
+								+ "Please enter an HP from the list above.");
+						validInput = false;
+					}
+				} catch (NumberFormatException e) {
+					validInput = false;
+					System.out.print("Please enter a valid Integer: ");
+				} catch (IOException e) {
+					validInput = false;
+					System.out.println("Reading error");
+				}
+			} while (!validInput);
+			//find the left bound of this name
+			int leftBound = index;
+			for(int i = index - 1; i >= 0; i--) {
+				if(key.getHP() != cards.get(i).getHP()) { //not the same, left bound is the element to the right
+					leftBound = i + 1;
+					break;
+				}
+			}
+//			System.out.println(leftBound);
+			while(leftBound < cards.size() && cards.get(leftBound).getHP() == key.getHP()) { //while card at left bound has same name as key
+				//increment static variables
+				totalCards--;
+				totalHP -= cards.get(leftBound).getHP(); //class variable
+				albumTotalHP -= cards.get(leftBound).getHP(); //instance variable
+				
+				cards.remove(leftBound); //sorted list
+			}
+		}
+		else if(modeSelection == 3) { //remove first card
+			//increment static variables
+			totalCards--;
+			totalHP -= cards.get(0).getHP(); //class variable
+			albumTotalHP -= cards.get(0).getHP(); //instance variable
+			
+			cards.remove(0); //sorted list
+		}
+		else { //remove last card
+			//increment static variables
+			totalCards--;
+			totalHP -= cards.get(lastIndex).getHP(); //class variable
+			albumTotalHP -= cards.get(lastIndex).getHP(); //instance variable
+			
+			cards.remove(lastIndex); //sorted list
 		}
 	}
 	
