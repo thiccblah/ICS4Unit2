@@ -16,6 +16,32 @@ public class Attack {
 		this.damage = damage;
 	}
 	
+	//getters
+	public String getName() {
+		return name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public String getDamage() {
+		return damage;
+	}
+	
+	//setters
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public void setDamage(String damage) {
+		this.damage = damage;
+	}
+	
 	public String toString() {
 		String result = "";
 		result += name + "\n";

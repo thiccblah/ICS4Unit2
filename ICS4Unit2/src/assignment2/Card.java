@@ -18,6 +18,7 @@ public class Card implements Comparable<Card> {
 	private Date dateObtained;
 	private ArrayList<Attack> attacks;
 	
+	//Constructor
 	public Card(String name, int HP, String type, Date dateObtained) {
 		attacks = new ArrayList<>();
 		this.name = name;
@@ -25,7 +26,8 @@ public class Card implements Comparable<Card> {
 		this.type = type;
 		this.dateObtained = dateObtained;
 	}
-	
+
+	//getters
 	public int getHP() {
 		return HP;
 	}
@@ -46,10 +48,13 @@ public class Card implements Comparable<Card> {
 		return dateObtained;
 	}
 	
+	//setters
 	public void setAttacks(ArrayList<Attack> attacks) {
 		this.attacks = attacks;
 	}
 	
+	//prompts the user to select an attack from the card, used in the edit attack function
+	//returns the index of the selected attack
 	public int promptAttack() {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		if(attacks.size() < 1) {
@@ -82,12 +87,15 @@ public class Card implements Comparable<Card> {
 		return index;
 	}
 	
-	public String toString() {
+	//Displays Card in the following format:
+	//Name: 'name'
+	//Date Obtained: 'MM/DD/YYYY'
+	public String toString() { 
 		return String.format("Name: %s%nDate Obtained: %s", name, dateObtained);
 	}
 	
-	public int compareTo(Card c) {
+	public int compareTo(Card c) { //sorts alphabetically ascending case insensitive
 		//sort by name
-		return name.compareTo(c.getName()); 
+		return name.compareToIgnoreCase(c.getName()); 
 	}
 }

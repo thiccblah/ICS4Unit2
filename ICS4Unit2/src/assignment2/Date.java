@@ -10,6 +10,7 @@ public class Date {
 	private int day;
 	private int year;
 	
+	//Constructor
 	public Date(String data) {
 		month = Integer.parseInt(data.substring(0, data.indexOf('/')));
 		day = Integer.parseInt(data.substring(data.indexOf('/') + 1, data.lastIndexOf('/')));
@@ -29,11 +30,22 @@ public class Date {
 		return year;
 	}
 	
-	public String toString() {
+	public String toString() { //returns date in MM/DD/YYYY format
 		return month + "/" + day + "/" + year;
 	}
 	
 	public boolean equals(Date d) {
 		return month == d.month && day == d.day && year == d.year; 
+	}
+	
+	public int compareTo(Date d) { //sorts by date ascending (old -> new)
+		int index = year - d.year;
+		if(index == 0) { //same year
+			index = month - d.month;
+			if(index == 0) { //same month
+				index = day - d.day;
+			}
+		}
+		return index;
 	}
 }

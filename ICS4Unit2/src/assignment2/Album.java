@@ -30,10 +30,12 @@ public class Album implements Comparable<Album> {
 		totalCapacity += maxCapacity;
 	}
 	
+	//Constructor
 	public Album(int albumNumber) {
 		this.albumNumber = albumNumber;
 	}
 	
+	//getters
 	public static int getTotalCards() {
 		return totalCards;
 	}
@@ -90,6 +92,8 @@ public class Album implements Comparable<Album> {
 		return albumNumber - a.albumNumber;
 	}
 	
+	//displays all card names and dates in an album
+	//returns nothing
 	public void displayCards() {
 		System.out.println("This album has " + cards.size() + " cards:\n");
 		for(int i = 0; i < cards.size(); i++) {
@@ -97,6 +101,8 @@ public class Album implements Comparable<Album> {
 		}
 	}
 	
+	//displays name, HP, type, attack(s) of a selected card prompted in the method
+	//returns nothing
 	public void cardInfo() {
 		int index = promptCard();
 		if(index >= 0) {
@@ -116,6 +122,8 @@ public class Album implements Comparable<Album> {
 		}
 	}
 
+	//adds a card to an album from user input, prompting all values of the card
+	//returns nothing
 	public void addCardFromInput() throws IOException {
 		//check capacity
 		if(cards.size() == maxCapacity) {
@@ -200,6 +208,9 @@ public class Album implements Comparable<Album> {
 		}
 	}
 	
+	//Adds a card read in from a file inputted in Driver.java
+	//Card c is the card (already created in Driver.java) to be added
+	//returns nothing
 	public void addCardFromFile(Card c) {
 		//check capacity
 		if(cards.size() == maxCapacity) {
@@ -215,6 +226,8 @@ public class Album implements Comparable<Album> {
 		}
 	}
 	
+	//prompts user to select a card in an album, then removes that card from the AL cards
+	//returns nothing
 	public void removeCard() {
 		if(cards.size() <= 0) {
 			System.out.println("There are no cards in this album..."
@@ -259,7 +272,7 @@ public class Album implements Comparable<Album> {
 		
 		//MAKE SURE TO UPDATE STATIC VARIABLES!!!!!!
 		if(modeSelection == 1) { //remove by name
-			Collections.sort(cards, new SortCardByName()); //sort every time since array is changing
+			Collections.sort(cards); //sort every time since array is changing
 			System.out.println("Listed below are all the cards in this album:"); //print all cards
 			for(int i = 0; i < cards.size(); i++) {
 				System.out.println("Name: " + cards.get(i).getName());
@@ -273,7 +286,7 @@ public class Album implements Comparable<Album> {
 				validInput = true;
 				try {
 					key = new Card(in.readLine().trim(), 0, "", new Date("0/0/0"));
-					index = Collections.binarySearch(cards, key, new SortCardByName());
+					index = Collections.binarySearch(cards, key);
 					if(index < 0) {
 						System.out.println("There is no card with that name!\n"
 								+ "Please enter a name from the list above.");
@@ -368,7 +381,11 @@ public class Album implements Comparable<Album> {
 		}
 	}
 	
+	//prompts user to select an attack on one card, then edits the card
+	//(either name, description, or damage)
+	//returns nothing
 	public void editAttack() {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		int cardIndex = promptCard();
 		if(cardIndex >= 0) {
 			int attackIndex = cards.get(cardIndex).promptAttack();
@@ -381,16 +398,95 @@ public class Album implements Comparable<Album> {
 							+ "\n1) Name"
 							+ "\n2) Description"
 							+ "\n3) Damage");
-					
+					try {
+						modeChoice = Integer.parseInt(in.readLine().trim());
+						if (modeChoice < 1 || modeChoice > 3) {
+							throw new NumberFormatException();
+						}
+					} catch (NumberFormatException e) {
+						validInput = false;
+						System.out.print("INVALID. Enter a number between 1 and 3: ");
+					} catch (IOException e) {
+						validInput = false;
+					}
 				} while (!validInput);
+				
+				if (modeChoice == 1) { //edit name
+					System.out.println("The current name is: " + 
+				cards.get(cardIndex).getAttacks().get(attackIndex).getName());
+					System.out.print("Enter the new name: ");
+					try {
+						cards.get(cardIndex).getAttacks().get(attackIndex).setName(in.readLine().trim());
+					} catch (IOException e) {
+						System.out.println("Reading error");
+					}
+				}
+				else if (modeChoice == 2) { //edit description
+					System.out.println("The current description is: " + 
+				cards.get(cardIndex).getAttacks().get(attackIndex).getDescription());
+					System.out.print("Enter the new description: ");
+					try {
+						cards.get(cardIndex).getAttacks().get(attackIndex).setDescription(in.readLine().trim());
+					} catch (IOException e) {
+						System.out.println("Reading error");
+					}
+				}
+				if (modeChoice == 3) { //edit Damage
+					System.out.println("The current Damage is: " + 
+				cards.get(cardIndex).getAttacks().get(attackIndex).getDamage());
+					System.out.print("Enter the new Damage: ");
+					try {
+						cards.get(cardIndex).getAttacks().get(attackIndex).setDamage(in.readLine().trim());
+					} catch (IOException e) {
+						System.out.println("Reading error");
+					}
+				}
 			}
 		}
 	}
 	
-	public void sortDislay(int sortMode) {
+	//Sorts the cards in an album from a user-selected Name, HP, or Date
+	//, then displays all cards using the displayCards() method from above
+	//returns nothing
+	public void sortDislay() {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("What mode would you like to sort by?"
+				+ "\n1) Name"
+				+ "\n2) HP"
+				+ "\n3) Date");
+		boolean validInput;
+		int modeSelection = 0;
+		do {
+			validInput = true;
+			try {
+				modeSelection = Integer.parseInt(in.readLine().trim());
+				if(modeSelection < 1 || modeSelection > 3)
+					throw new NumberFormatException();
+			} catch (NumberFormatException e) {
+				validInput = false;
+				System.out.println("INVALID. Please enter a number between 1 and 3");
+			} catch (IOException e) {
+				validInput = false;
+				System.out.println("Reading error");
+			}
+		} while (!validInput);
 		
+		if(modeSelection == 1) { //sort by name
+			Collections.sort(cards); //default sort by name
+		}
+		else if(modeSelection == 2) { //sort by HP
+			Collections.sort(cards, new SortCardbyHP());
+		}
+		else { //3; sort by date
+			Collections.sort(cards, new SortCardByDate());
+		}
+		
+		//print all
+		displayCards();
 	}
 	
+	//Prompts the user to select a card in the album
+	//returns the index of the selected card in the AL Cards
 	public int promptCard() {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		if(cards.size() < 1) {
