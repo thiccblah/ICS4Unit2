@@ -48,12 +48,12 @@ public class Driver
 			}
 			
 			else if (mainMenuChoice == 2) {
+				chosenAlbum = promptAlbum(stdIn, albums, 1); //prompt album
 				do {
 					subMenuChoice = displayMenu (2, stdIn); //prompt menu item
 					if(subMenuChoice == 7) {
 						break;
 					}
-					chosenAlbum = promptAlbum(stdIn, albums, 1); //prompt album
 					if(subMenuChoice == 1) { //display all cards in a deck (last sorted order)
 						albums.get(chosenAlbum).displayCards();
 					}
