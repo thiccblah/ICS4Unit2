@@ -36,7 +36,7 @@ public class Driver
 					}
 					else if(subMenuChoice == 3) { //add an album
 						System.out.print("Enter the name of the album file: ");
-						addAlbum(appendExtension(stdIn.readLine()), albums);
+						addAlbum(appendExtension(stdIn.readLine().trim()), albums);
 					}
 					else if(subMenuChoice == 4) { //remove an album
 						removeAlbum(stdIn, albums);
@@ -164,7 +164,7 @@ public class Driver
 			do {
 				validInput = true;
 				try {
-					int inputNumber = Integer.parseInt(in.readLine());
+					int inputNumber = Integer.parseInt(in.readLine().trim());
 					Album key = new Album(inputNumber);
 					index = Collections.binarySearch(albums, key);
 					if(index < 0)
@@ -197,7 +197,7 @@ public class Driver
 			do {
 				validInput = true;
 				try {
-					int inputNumber = Integer.parseInt(in.readLine());
+					int inputNumber = Integer.parseInt(in.readLine().trim());
 					if(inputNumber < 1 || inputNumber > uniqueDates) { //out of range of number of dates
 						throw new NumberFormatException();
 					}
@@ -235,7 +235,7 @@ public class Driver
 	public static void addAlbum(String fileName, ArrayList<Album> albums) {
 		try {
 			BufferedReader fileIn = new BufferedReader(new FileReader(fileName));
-			int albumNumber = Integer.parseInt(fileIn.readLine());
+			int albumNumber = Integer.parseInt(fileIn.readLine().trim());
 			Album key = new Album(albumNumber);
 			int position = Collections.binarySearch(albums, key);
 //			System.out.println(position);
@@ -245,11 +245,11 @@ public class Driver
 				fileIn.close();
 				return;
 			}
-			Date createdDate = new Date(fileIn.readLine());
-			int maxCapacity = Integer.parseInt(fileIn.readLine());
+			Date createdDate = new Date(fileIn.readLine().trim());
+			int maxCapacity = Integer.parseInt(fileIn.readLine().trim());
 			Album tempAlbum = new Album(albumNumber, maxCapacity, createdDate); //finish the album and add to AL at the end
 			
-			int cardCount = Integer.parseInt(fileIn.readLine());
+			int cardCount = Integer.parseInt(fileIn.readLine().trim());
 			String cardName;
 			int cardHP;
 			String cardType;
@@ -260,15 +260,15 @@ public class Driver
 			String attackDamage;
 			
 			for(int i = 0; i < cardCount; i++) {
-				cardName = fileIn.readLine();
-				cardHP = Integer.parseInt(fileIn.readLine());
-				cardType = fileIn.readLine();
-				cardDate = new Date(fileIn.readLine());
+				cardName = fileIn.readLine().trim();
+				cardHP = Integer.parseInt(fileIn.readLine().trim());
+				cardType = fileIn.readLine().trim();
+				cardDate = new Date(fileIn.readLine().trim());
 				Card tempCard = new Card(cardName, cardHP, cardType, cardDate);
-				attackCount = Integer.parseInt(fileIn.readLine());
+				attackCount = Integer.parseInt(fileIn.readLine().trim());
 				for(int j = 0; j < attackCount; j++) {
-					attackInfo = fileIn.readLine();
-					attackDamage = fileIn.readLine();
+					attackInfo = fileIn.readLine().trim();
+					attackDamage = fileIn.readLine().trim();
 					if(attackInfo.indexOf('-') < 0) { //no dash, so no description
 						tempCard.addAttack(new Attack(attackInfo, null, attackDamage));
 					}
@@ -305,7 +305,7 @@ public class Driver
 					+ "2) Remove by date");
 			validInput = true;
 			try {
-				modeChoice = Integer.parseInt(stdIn.readLine());
+				modeChoice = Integer.parseInt(stdIn.readLine().trim());
 				if(modeChoice > 2 || modeChoice < 1) {
 					throw new NumberFormatException();
 				}
