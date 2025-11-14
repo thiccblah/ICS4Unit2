@@ -15,6 +15,16 @@ public class Date {
 		month = Integer.parseInt(data.substring(0, data.indexOf('/')));
 		day = Integer.parseInt(data.substring(data.indexOf('/') + 1, data.lastIndexOf('/')));
 		year = Integer.parseInt(data.substring(data.lastIndexOf('/') + 1));
+		
+		if(month < 0 || month > 12) {
+			throw new NumberFormatException();
+		}
+		if(day < 0 || day > 31) {
+			throw new NumberFormatException();
+		}
+		if(year < 1 || year > 2025) {
+			throw new NumberFormatException();
+		}
 	}
 	
 	//getters
