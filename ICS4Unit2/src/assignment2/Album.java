@@ -141,9 +141,12 @@ public class Album implements Comparable<Album> {
 				try {
 					System.out.print("Please enter the HP of the card: ");
 					HP = Integer.parseInt(in.readLine().trim());
+					if(HP < 0) {
+						throw new NumberFormatException();
+					}
 				} catch (NumberFormatException e) {
 					validInput = false;
-					System.out.print("INVALID. ");
+					System.out.println("INVALID. Please enter a positive integer.");
 				}
 			} while (!validInput);
 			System.out.print("Please enter the type of the pokemon: ");
@@ -193,7 +196,10 @@ public class Album implements Comparable<Album> {
 					tempDate = new Date(in.readLine().trim());
 				} catch (IndexOutOfBoundsException e) { //if invalid String format
 					validInput = false;
-					System.out.print("INVALID. ");
+					System.out.print("INVALID FORMAT. ");
+				} catch (NumberFormatException e) {
+					validInput = false;
+					System.out.println("INVALID DATE VALUE. ");
 				}
 			} while (!validInput);
 			

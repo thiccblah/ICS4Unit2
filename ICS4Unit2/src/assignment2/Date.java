@@ -16,6 +16,7 @@ public class Date {
 		day = Integer.parseInt(data.substring(data.indexOf('/') + 1, data.lastIndexOf('/')));
 		year = Integer.parseInt(data.substring(data.lastIndexOf('/') + 1));
 		
+		//check for invalid numbers
 		if(month < 0 || month > 12) {
 			throw new NumberFormatException();
 		}
@@ -26,7 +27,7 @@ public class Date {
 			throw new NumberFormatException();
 		}
 	}
-	
+
 	//getters
 	public int getMonth() {
 		return month;
