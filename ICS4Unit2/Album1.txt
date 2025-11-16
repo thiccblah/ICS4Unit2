@@ -2,8 +2,8 @@
 05/24/2020
 20
 3
-Jigglypuff
-60
+Wigglytuff
+80
 Fairy
 06/12/2020
 2
@@ -12,7 +12,7 @@ Double Slap - Flip 2 coins. This attack does 20damage times the number of heads.
 Rollout
 10
 Grimer
-80
+90
 Psychic
 03/26/2020
 1

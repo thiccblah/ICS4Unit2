@@ -95,6 +95,11 @@ public class Album implements Comparable<Album> {
 	//displays all card names and dates in an album
 	//returns nothing
 	public void displayCards() {
+		if(cards.size() <= 0) {
+			System.out.println("There are no cards in this album..."
+					+ "\nPlease add a card to get started!");
+			return;
+		}
 		System.out.println("This album has " + cards.size() + " cards:\n");
 		for(int i = 0; i < cards.size(); i++) {
 			System.out.println(cards.get(i) + "\n");
@@ -141,7 +146,7 @@ public class Album implements Comparable<Album> {
 				try {
 					System.out.print("Please enter the HP of the card: ");
 					HP = Integer.parseInt(in.readLine().trim());
-					if(HP < 0) {
+					if(HP < 1) {
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e) {
@@ -291,7 +296,7 @@ public class Album implements Comparable<Album> {
 			do {
 				validInput = true;
 				try {
-					key = new Card(in.readLine().trim(), 0, "", new Date("0/0/0"));
+					key = new Card(in.readLine().trim(), 0, "", new Date("1/1/1"));
 					index = Collections.binarySearch(cards, key);
 					if(index < 0) {
 						System.out.println("There is no card with that name!\n"
@@ -309,6 +314,9 @@ public class Album implements Comparable<Album> {
 				if(!key.getName().equals(cards.get(i).getName())) { //not the same, left bound is the element to the right
 					leftBound = i + 1;
 					break;
+				}
+				else { //same HP
+					leftBound = i; //if I don't do this leftBound doesn't hit 0
 				}
 			}
 //			System.out.println(leftBound);
@@ -336,7 +344,7 @@ public class Album implements Comparable<Album> {
 			do {
 				validInput = true;
 				try {
-					key = new Card("", Integer.parseInt(in.readLine().trim()), "", new Date("0/0/0"));
+					key = new Card("", Integer.parseInt(in.readLine().trim()), "", new Date("1/1/1"));
 					index = Collections.binarySearch(cards, key, new SortCardbyHP());
 					if(index < 0) {
 						System.out.println("There is no card with that HP!\n"
@@ -351,12 +359,15 @@ public class Album implements Comparable<Album> {
 					System.out.println("Reading error");
 				}
 			} while (!validInput);
-			//find the left bound of this name
+			//find the left bound of this HP
 			int leftBound = index;
 			for(int i = index - 1; i >= 0; i--) {
 				if(key.getHP() != cards.get(i).getHP()) { //not the same, left bound is the element to the right
 					leftBound = i + 1;
 					break;
+				}
+				else { //same HP
+					leftBound = i; //if I don't do this leftBound doesn't hit 0
 				}
 			}
 //			System.out.println(leftBound);
@@ -368,6 +379,9 @@ public class Album implements Comparable<Album> {
 				
 				cards.remove(leftBound); //sorted list
 			}
+			System.out.println(leftBound);
+			System.out.println(cards.get(leftBound).getHP());
+			System.out.println(key.getHP());
 		}
 		else if(modeSelection == 3) { //remove first card
 			//increment static variables
@@ -432,7 +446,11 @@ public class Album implements Comparable<Album> {
 				cards.get(cardIndex).getAttacks().get(attackIndex).getDescription());
 					System.out.print("Enter the new description: ");
 					try {
-						cards.get(cardIndex).getAttacks().get(attackIndex).setDescription(in.readLine().trim());
+						String input = in.readLine().trim();
+						if(input.equals("")) {
+							cards.get(cardIndex).getAttacks().get(attackIndex).setDescription(null); //consistent no description
+						}
+						cards.get(cardIndex).getAttacks().get(attackIndex).setDescription(input);
 					} catch (IOException e) {
 						System.out.println("Reading error");
 					}

@@ -50,6 +50,9 @@ public class Driver
 			else if (mainMenuChoice == 2) {
 				chosenAlbum = promptAlbum(stdIn, albums, 1); //prompt album
 				do {
+					if(chosenAlbum == -1) { //no albums
+						break;
+					}
 					subMenuChoice = displayMenu (2, stdIn); //prompt menu item
 					if(subMenuChoice == 7) {
 						break;
@@ -125,6 +128,7 @@ public class Driver
 
 		int choice = 0;
 		boolean validInput;
+		//catch invalid numbers that are not assigned to a selection
 		do {
 			validInput = true;
 			try {
@@ -371,7 +375,7 @@ public class Driver
 	//returns the resulting String
 	public static String appendExtension(String data) {
 		if(data.length() < 4)
-			return data;
+			return data + ".txt";
 		if(data.substring(data.length() - 4).equals(".txt"))
 			return data;
 		else
